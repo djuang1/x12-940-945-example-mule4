@@ -1,0 +1,23 @@
+ISA*00*          *00*          *01*SENDER ID      *01*RECEIVER ID    *140815*1145*U*00401*000000001*0*T*!~
+GS*OW*SENDER ID*RECEIVER ID*20140815*0040100*1*X*004010~
+ST*940*0001~
+W05*N*DepositorOrderNo*PurchaseOrderNo~
+N1*DE*WarehouseName*6*PlantCode**WH~
+N3*WarehouseAddr1*WarehouseAddr2~
+N4*PARIS*CA*91506~
+N9*BM*BillOfLadingNumber~
+N9*LO*LoadPlanningNo~
+G61*DC*DeliveryContactName*TE*8185551234~
+G62*02*20140815~
+NTE*DEL*Delivery Notes~
+NTE*WHI*Warehouse Instructions~
+W66*CC*A***RoutingFreeFormDescript*****SCAC~
+LX*1~
+W01*127.12*BG*UPC CaseCode*SW*ProductStockNo*LT*ProductLotNo*******01*ZZ*ProductNo~
+G69*FreeFormDescription~
+N9*LI*LineItemID*ItemDesc~
+W20****34567.12*G*L~
+W76*7*93456.98*LB*345.87*CF~
+SE*19*0001~
+GE*1*1~
+IEA*1*000000001~

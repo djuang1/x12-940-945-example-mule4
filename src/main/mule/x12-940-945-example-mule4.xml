@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:sftp="http://www.mulesoft.org/schema/mule/sftp" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:x12="http://www.mulesoft.org/schema/mule/x12" xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/x12 http://www.mulesoft.org/schema/mule/x12/current/mule-x12.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/sftp http://www.mulesoft.org/schema/mule/sftp/current/mule-sftp.xsd">
+	<x12:config name="X12_EDI_Config" doc:name="X12 EDI Config" doc:id="66386f2b-f27c-45c4-a9a5-8727df6e7260" interchangeIdQualifierSelf="01" interchangeIdSelf="RECEIVER ID" groupIdSelf="RECEIVER ID" interchangeIdQualifierPartner="01" interchangeIdPartner="SENDER ID" groupIdPartner="SENDER ID" enforceLengthLimits="false" enforceCharacterSet="false" enforceValueRepeats="false" enforceSegmentOrder="false" enforceSegmentRepeats="false" requireUniqueInterchanges="false">
+		<x12:schemas >
+			<x12:schema value="${file.base}/src/main/resources/schemas/940.esl" />
+			<x12:schema value="${file.base}/src/main/resources/schemas/945.esl" />
+			<x12:schema value="${file.base}/src/main/resources/schemas/997.esl" />
+		</x12:schemas>
+	</x12:config>
+	<configuration-properties doc:name="Configuration properties" doc:id="8bf2c8ab-c2f8-42f6-b810-bb02386d06c0" file="mule-properties.yaml" />
+	<flow name="x12-814-processingFlow" doc:id="7e5b3aeb-97c1-4245-b0fe-d9dfe360fb81" >
+		<file:listener doc:name="File - On New or Updated File" doc:id="d1e9d39a-4aba-4633-9fc6-0f6cb3dd61cd" directory="${file.base}/src/main/resources/input" moveToDirectory="${file.base}/src/main/resources/processed">
+			<scheduling-strategy>
+				<fixed-frequency frequency="30" timeUnit="SECONDS" />
+			</scheduling-strategy>
+		</file:listener>
+		<x12:read doc:name="Read" doc:id="788ef111-36e0-4a87-9f8e-2f5f2fd260a6" config-ref="X12_EDI_Config"/>
+		<ee:transform doc:name="Transform Message" doc:id="19b3926d-f3bf-43bd-983f-7ea534f19737" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+payload.TransactionSets.v004010."940"]]></ee:set-payload>
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="origTransaction" ><![CDATA[%dw 2.0
+output application/java
+---
+payload]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<foreach doc:name="For Each" doc:id="9700e151-a84d-4cd5-a52e-ab1b11e03212" collection='#[payload.Detail."0300_Loop"]'>
+			<ee:transform doc:name="Transform Message" doc:id="4f2bc3a5-5d08-42f5-83af-9c041df5e374" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload."0310_Loop"[0] map {
+	Quantity: $."020_W01".W0101,
+	UPC: $."020_W01".W0103,
+	ProductNo: $."020_W01".W0116
+}
+]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<file:write doc:name="Write Line Item" doc:id="6cb36f5c-358d-4cb7-bde4-035a6b58b386" path="#[p('file.base') ++ '/src/main/resources/output/lineitem' ++ vars.counter ++ '.json']" />
+		</foreach>
+		<ee:transform doc:name="Transform Message" doc:id="7083bf2f-439c-4e34-9c5c-ccd1f7765eb0" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	TransactionSets: {
+		v004010: {
+			'997' : (vars.origTransaction.FunctionalAcksGenerated default "")
+		}
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<x12:write doc:name="Write" doc:id="07d2345e-294a-469d-8408-ec02afd18a98" config-ref="X12_EDI_Config"/>
+		<file:write doc:name="Write ACK" doc:id="647cc8be-b28e-40b7-a850-425ba2e604e0" path="#[p('file.base') ++ &quot;/src/main/resources/output/ack.edi&quot;]" />
+	</flow>
+</mule>

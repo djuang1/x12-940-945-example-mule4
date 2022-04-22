@@ -1,0 +1,109 @@
+form: X12
+version: '004010'
+imports: [ '/x12/004010/basedefs.esl' ]
+id: '940'
+name: 'Warehouse Shipping Order'
+class: 'OW'
+heading: 
+- { idRef: 'ST', position: '010', usage: M }
+- { idRef: 'W05', position: '020', usage: M }
+- groupId: '0100_Loop'
+  count: 10
+  usage: O
+  items: 
+  - { idRef: 'N1', position: '040', usage: O }
+  - { idRef: 'N2', position: '050', usage: O, count: 2 }
+  - { idRef: 'N3', position: '060', usage: O, count: 2 }
+  - { idRef: 'N4', position: '070', usage: O }
+  - { idRef: 'PER', position: '080', usage: O, count: 5 }
+- { idRef: 'N9', position: '090', usage: O, count: 10 }
+- { idRef: 'G61', position: '100', usage: O, count: 3 }
+- { idRef: 'G62', position: '110', usage: O, count: 10 }
+- { idRef: 'NTE', position: '120', usage: O, count: '>1' }
+- { idRef: 'W09', position: '130', usage: O }
+- { idRef: 'W66', position: '140', usage: O }
+- { idRef: 'W6', position: '150', usage: O }
+- { idRef: 'R2', position: '153', usage: O, count: 13 }
+- { idRef: 'BNX', position: '156', usage: O }
+- groupId: '0200_Loop'
+  count: 10
+  usage: O
+  items: 
+  - { idRef: 'LM', position: '160', usage: O }
+  - { idRef: 'LQ', position: '170', usage: M, count: 100 }
+detail: 
+- groupId: '0300_Loop'
+  count: '>1'
+  usage: O
+  items: 
+  - { idRef: 'LX', position: '005', usage: O }
+  - { idRef: 'MAN', position: '010', usage: O, count: '>1' }
+  - { idRef: 'SDQ', position: '015', usage: O, count: '>1' }
+  - { idRef: 'N1', position: '016', usage: O }
+  - { idRef: 'G62', position: '017', usage: O, count: 10 }
+  - groupId: '0310_Loop'
+    count: '>1'
+    usage: O
+    items: 
+    - { idRef: 'W01', position: '020', usage: O }
+    - { idRef: 'G69', position: '030', usage: O, count: 5 }
+    - { idRef: 'N9', position: '040', usage: O, count: 200 }
+    - { idRef: 'NTE', position: '045', usage: O, count: '>1' }
+    - { idRef: 'W20', position: '050', usage: O, count: 3 }
+    - { idRef: 'QTY', position: '070', usage: O, count: 10 }
+    - { idRef: 'AMT', position: '080', usage: O }
+    - { idRef: 'G62', position: '090', usage: O, count: 10 }
+    - { idRef: 'G66', position: '100', usage: O }
+    - { idRef: 'N1', position: '110', usage: O, count: 3 }
+    - { idRef: 'PER', position: '112', usage: O, count: 5 }
+    - { idRef: 'LH2', position: '114', usage: O, count: 6 }
+    - { idRef: 'LHR', position: '116', usage: O }
+    - { idRef: 'LH6', position: '118', usage: O, count: 5 }
+    - groupId: '0320_Loop'
+      count: 10
+      usage: O
+      items: 
+      - { idRef: 'LM', position: '120', usage: O }
+      - { idRef: 'LQ', position: '130', usage: M, count: 100 }
+    - wrapId: '0330'
+      position: '135'
+      endPosition: '285'
+      usage: O
+      group: 
+      - groupId: '0330_Loop'
+        count: '>1'
+        usage: O
+        items: 
+        - { idRef: 'LX', position: '140', usage: O }
+        - { idRef: 'N9', position: '150', usage: O, count: '>1' }
+        - { idRef: 'G62', position: '160', usage: O, count: 10 }
+        - { idRef: 'N1', position: '170', usage: O }
+        - { idRef: 'SDQ', position: '175', usage: O, count: '>1' }
+        - groupId: '0331_Loop'
+          count: 10
+          usage: O
+          items: 
+          - { idRef: 'LM', position: '180', usage: O }
+          - { idRef: 'LQ', position: '190', usage: M, count: 100 }
+        - groupId: '0332_Loop'
+          count: '>1'
+          usage: O
+          items: 
+          - { idRef: 'LH1', position: '200', usage: O }
+          - { idRef: 'LH2', position: '210', usage: O, count: 4 }
+          - { idRef: 'LH3', position: '220', usage: O, count: 10 }
+          - { idRef: 'LFH', position: '230', usage: O, count: 20 }
+          - { idRef: 'LEP', position: '240', usage: O, count: 3 }
+          - { idRef: 'LH4', position: '250', usage: O }
+          - { idRef: 'LHT', position: '260', usage: O, count: 3 }
+          - { idRef: 'LHR', position: '270', usage: O, count: 5 }
+          - { idRef: 'PER', position: '280', usage: O, count: 5 }
+    - groupId: '0340_Loop'
+      count: '>1'
+      usage: O
+      items: 
+      - { idRef: 'FA1', position: '290', usage: O }
+      - { idRef: 'FA2', position: '300', usage: M, count: '>1' }
+summary: 
+- { idRef: 'W76', position: '010', usage: O }
+- { idRef: 'SE', position: '020', usage: M }

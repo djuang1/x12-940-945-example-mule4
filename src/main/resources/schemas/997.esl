@@ -1,0 +1,23 @@
+form: X12
+version: '004010'
+imports: [ '/x12/004010/basedefs.esl' ]
+id: '997'
+name: 'Functional Acknowledgment'
+class: 'FA'
+heading: 
+- { idRef: 'ST', position: '010', usage: M }
+- { idRef: 'AK1', position: '020', usage: M }
+- groupId: 'AK2_Loop'
+  count: 999999
+  usage: O
+  items: 
+  - { idRef: 'AK2', position: '030', usage: O }
+  - groupId: 'AK3_Loop'
+    count: 999999
+    usage: O
+    items: 
+    - { idRef: 'AK3', position: '040', usage: O }
+    - { idRef: 'AK4', position: '050', usage: O, count: 99 }
+  - { idRef: 'AK5', position: '060', usage: M }
+- { idRef: 'AK9', position: '070', usage: M }
+- { idRef: 'SE', position: '080', usage: M }
